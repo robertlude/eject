@@ -23,7 +23,7 @@ defmodule Eject do
     quote do
       @dependencies %{@dependencies |
         static: Map.merge(
-                  @dependencies.static, 
+                  @dependencies.static,
                   %{unquote(key) => unquote(value)}
                 )
       }
@@ -49,7 +49,7 @@ defmodule Eject do
 
         Enum.reduce @dependencies.dynamic,
                     deps_with_static,
-                    fn key, deps -> 
+                    fn key, deps ->
                       name_string = "__dynamic_dependency_generator__#{key}__"
 
                       name_atom = String.to_atom name_string
@@ -58,8 +58,8 @@ defmodule Eject do
                                                    name_atom,
                                                    0
 
-                      Map.put_new_lazy deps, 
-                                       key, 
+                      Map.put_new_lazy deps,
+                                       key,
                                        generator
                     end
       end
@@ -73,7 +73,7 @@ defmodule Test do
   dependency test1: "abc"
   dependency test2: 123
   dependency :test3, do: :rand.uniform(89) + 10
- 
+
   def test(deps \\ %{}) do
     %{
       test1: test1,
@@ -86,5 +86,15 @@ defmodule Test do
     IO.inspect test3, label: "test3"
 
     :ok
+  end
+end
+
+ExUnit.start
+defmodule TestTest do
+  use ExUnit.Case
+  use Eject.ExUnit
+
+  fake_dep :my_fake_deps do
+    def test_fn(x), do: x * x
   end
 end
