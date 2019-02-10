@@ -1,5 +1,5 @@
 defmodule Eject.Deps do
-  defstruct dynamic: %{},
+  defstruct dynamic: [],
             static:  %{}
 
   def process(deps = %__MODULE__{}, values = %{}) do
