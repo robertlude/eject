@@ -2,6 +2,14 @@
 
 **TODO: Add description**
 
+Allows you to:
+* Run tests asynchronously
+* Mock dependencies
+* Specify dependencies
+* Compile time values
+* Run time values
+* Defaults
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
