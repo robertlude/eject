@@ -94,7 +94,9 @@ defmodule TestTest do
   use ExUnit.Case
   use Eject.ExUnit
 
-  fake_dep :my_fake_deps do
-    def test_fn(x), do: x * x
-  end
+  defdep :my_fake_deps,
+         [
+           {:test,  2, :test_ok},
+           {:test2, 0, :test2_ok},
+         ]
 end

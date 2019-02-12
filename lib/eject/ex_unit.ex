@@ -5,30 +5,30 @@ defmodule Eject.ExUnit do
     end
   end
 
-  defmacro fake_dep(key, do: body) do
-    IO.inspect key,  label: "key"
-    IO.inspect body, label: "body"
+  defmacro defdep(key, functions_asts) do
+    IO.inspect key,            label: "key"
+    IO.inspect functions_asts, label: "functions_asts"
+
+    functions = Enum.map functions_asts,
+                         fn {_, _, definition} -> List.to_tuple definition end
+
+    IO.inspect functions, label: "functions"
 
     module_name = key
                   |> Atom.to_string
                   |> Macro.camelize
                   |> String.to_atom
 
-    module_ast = {
-      :defmodule,
-      [
-        context: Elixir,
-        import:  Kernel
-      ],
-      [
-        {
-          :__aliases__,
-          [alias: false],
-          [module_name]
-        },
-        [do: body]
-      ]
-    }
+    full_module_name = Module.concat __MODULE__,
+                                     module_name
+
+    function_asts = Enum.map functions,
+                             &Eject.ExUnit.AST.function/1
+
+    IO.inspect function_asts, label: "function_asts"
+
+    module_ast = Eject.ExUnit.AST.module module_name,
+                                         function_asts
 
     quote do
       unquote module_ast
@@ -42,7 +42,7 @@ defmodule Eject.ExUnit do
                                          unquote(module_name)
 
         new_deps = Map.merge deps,
-                   %{unquote(key) => full_module_name}
+                   %{unquote(key) => unquote(full_module_name)}
 
         [deps: new_deps]
       end
