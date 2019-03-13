@@ -1,4 +1,6 @@
 defmodule Eject.ExUnit do
+  alias __MODULE__.AST
+
   defmacro __using__(_) do
     quote do
       import Eject.ExUnit
@@ -14,21 +16,7 @@ defmodule Eject.ExUnit do
                   |> Macro.camelize
                   |> String.to_atom
 
-    module_ast = {
-      :defmodule,
-      [
-        context: Elixir,
-        import:  Kernel
-      ],
-      [
-        {
-          :__aliases__,
-          [alias: false],
-          [module_name]
-        },
-        [do: body]
-      ]
-    }
+    module_ast = AST.module module_name, body
 
     quote do
       unquote module_ast

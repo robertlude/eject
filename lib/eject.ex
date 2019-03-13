@@ -3,6 +3,9 @@ defmodule Eject do
   Documentation for Eject.
   """
 
+  # TODO delete me
+  alias Eject.ExUnit.AST
+
   defmacro __using__(_) do
     quote do
       import Eject
@@ -14,9 +17,22 @@ defmodule Eject do
   end
 
   defmacro macro_test() do
-    quote do
-      IO.puts "Hello"
+    body_ast = quote do
+      IO.puts "this is a test"
+      123
     end
+
+    IO.inspect body_ast, label: "body_ast"
+
+    function_ast = AST.function :prefix_test, body_ast
+
+    prefix_ast = quote do
+      IO.puts "I'm about to say something..."
+    end
+
+    IO.inspect prefix_ast, label: "prefix_ast"
+
+    AST.prefix_function_code function_ast, prefix_ast
   end
 
   defmacro defdep([{key, value}]) do
@@ -78,6 +94,8 @@ defmodule Test do
   defdep test2: 123
   defdep :test3, do: :rand.uniform(89) + 10
   defdep hello: Hello
+
+  macro_test
 
   def test(deps \\ %{}) do
     %{
