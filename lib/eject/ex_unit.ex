@@ -38,6 +38,10 @@ defmodule Eject.ExUnit do
                        :deps,
                        %{}
 
+        mailbox = if Map.has_key?(context, :mailbox),
+                     do:   Map[:mailbox],
+                     else: Eject.ExUnit.Mailbox.create()
+
         full_module_name = Module.concat __MODULE__,
                                          unquote(module_name)
 
