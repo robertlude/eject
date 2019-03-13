@@ -1,3 +1,6 @@
+# Hi, don't use this. The repo is only public as I am using it with another
+# work-in-progress. It is not ready to general use, unfortunately.
+
 # Eject
 
 **TODO: Add description**
