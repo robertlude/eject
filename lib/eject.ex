@@ -19,7 +19,7 @@ defmodule Eject do
     end
   end
 
-  defmacro dependency([{key, value}]) do
+  defmacro defdep([{key, value}]) do
     quote do
       @dependencies %{@dependencies |
         static: Map.merge(
@@ -30,7 +30,7 @@ defmodule Eject do
     end
   end
 
-  defmacro dependency(key, do: generator) do
+  defmacro defdep(key, do: generator) do
     function_name = String.to_atom "__dynamic_dependency_generator__#{key}__"
 
     quote do
@@ -67,34 +67,31 @@ defmodule Eject do
   end
 end
 
+defmodule Hello do
+  def hello, do: "world"
+end
+
 defmodule Test do
   use Eject
 
-  dependency test1: "abc"
-  dependency test2: 123
-  dependency :test3, do: :rand.uniform(89) + 10
+  defdep test1: "abc"
+  defdep test2: 123
+  defdep :test3, do: :rand.uniform(89) + 10
+  defdep hello: Hello
 
   def test(deps \\ %{}) do
     %{
+      hello: hello,
       test1: test1,
       test2: test2,
       test3: test3,
     } = process_deps deps
 
-    IO.inspect test1, label: "test1"
-    IO.inspect test2, label: "test2"
-    IO.inspect test3, label: "test3"
+    IO.inspect test1,       label: "test1"
+    IO.inspect test2,       label: "test2"
+    IO.inspect test3,       label: "test3"
+    IO.inspect hello.hello, label: "hello.hello"
 
     :ok
-  end
-end
-
-ExUnit.start
-defmodule TestTest do
-  use ExUnit.Case
-  use Eject.ExUnit
-
-  fake_dep :my_fake_deps do
-    def test_fn(x), do: x * x
   end
 end

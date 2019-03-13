@@ -5,7 +5,7 @@ defmodule Eject.ExUnit do
     end
   end
 
-  defmacro fake_dep(key, do: body) do
+  defmacro depmodule(key, do: body) do
     IO.inspect key,  label: "key"
     IO.inspect body, label: "body"
 
@@ -42,7 +42,25 @@ defmodule Eject.ExUnit do
                                          unquote(module_name)
 
         new_deps = Map.merge deps,
-                   %{unquote(key) => full_module_name}
+                             %{unquote(key) => full_module_name}
+
+        [deps: new_deps]
+      end
+    end
+  end
+
+  defmacro depvalue([{key, value}]) do
+    IO.inspect key,   label: "key"
+    IO.inspect value, label: "value"
+
+    quote do
+      setup context do
+        deps = Map.get context,
+                       :deps,
+                       %{}
+
+        new_deps = Map.merge deps,
+                             %{unquote(key) => unquote(value)}
 
         [deps: new_deps]
       end
