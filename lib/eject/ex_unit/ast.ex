@@ -68,7 +68,7 @@ defmodule Eject.ExUnit.AST do
     {
       :__block__,
       [],
-      Enum.concat(body_a, body_b),
+      body_a ++ body_b,
     }
   end
 

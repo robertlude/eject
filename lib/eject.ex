@@ -26,6 +26,8 @@ defmodule Eject do
 
     function_ast = AST.function :prefix_test, body_ast
 
+    IO.inspect function_ast, label: "function_ast"
+
     prefix_ast = quote do
       IO.puts "I'm about to say something..."
     end
@@ -99,7 +101,7 @@ defmodule Test do
   defdep :test3, do: :rand.uniform(89) + 10
   defdep hello: Hello
 
-  macro_test
+  macro_test()
 
   def test(deps \\ %{}) do
     %{
