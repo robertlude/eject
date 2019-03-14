@@ -77,17 +77,21 @@ defmodule Eject.ExUnit.AST do
   defp normalize_body(body)                    when is_list(body), do: body
   defp normalize_body(body),                   do: [body]
 
-  def each_function module_ast, filter do
+  def each_function(
     {
       :defmodule,
       module_metadata,
       [
         module_data,
         [do: module_body],
-      ]
-    } = module_ast
+      ],
+    },
+    filter
+  ) do
+    normalized_module_body = normalize_body module_body
 
-    new_module_body = process_each_function module_body, filter
+    new_module_body = process_each_function normalized_module_body,
+                                            filter
   end
 
   defp process_each_function(function = {:def, _, _}, filter) do
