@@ -35,7 +35,7 @@ defmodule Eject.ExUnit.AST do
     }
   end
 
-  def prefix_function_code function_ast, prefix_code do
+  def prefix_function_code(
     {
       :def,
       def_metadata,
@@ -43,25 +43,39 @@ defmodule Eject.ExUnit.AST do
         function_metadata,
         [do: function_body],
       ]
-    } = function_ast
-
+    },
+    prefix_code
+  ) do
     {
       :def,
       def_metadata,
       [
         function_metadata,
         [
-          do: [
-            normalize_body(prefix_code),
-            normalize_body(function_body),
-          ]
-        ]
+          do: combine_bodies(
+                normalize_body(prefix_code),
+                normalize_body(function_body)
+              ),
+        ],
       ],
     }
   end
 
-  defp normalize_body({:__block__, [], body}), do: body
-  defp normalize_body(body),                   do: body
+  defp combine_bodies(a, b) do
+    body_a = normalize_body a
+    body_b = normalize_body b
+
+    {
+      :__block__,
+      [],
+      Enum.concat(body_a, body_b),
+    }
+  end
+
+  defp normalize_body({:__block__, [], body})  when is_list(body), do: body
+  defp normalize_body({:__block__, [], body}), do: [body]
+  defp normalize_body(body)                    when is_list(body), do: body
+  defp normalize_body(body),                   do: [body]
 
   def each_function module_ast, filter do
     {

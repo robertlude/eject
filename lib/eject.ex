@@ -32,7 +32,11 @@ defmodule Eject do
 
     IO.inspect prefix_ast, label: "prefix_ast"
 
-    AST.prefix_function_code function_ast, prefix_ast
+    final_ast = AST.prefix_function_code function_ast, prefix_ast
+
+    IO.inspect final_ast, label: "final_ast"
+
+    final_ast
   end
 
   defmacro defdep([{key, value}]) do
