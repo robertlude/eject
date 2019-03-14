@@ -18,27 +18,16 @@ defmodule Eject do
 
   defmacro macro_test() do
     body_ast = quote do
-      IO.puts "this is a test"
       123
     end
 
-    IO.inspect body_ast, label: "body_ast"
-
     function_ast = AST.function :prefix_test, body_ast
-
-    IO.inspect function_ast, label: "function_ast"
 
     prefix_ast = quote do
       IO.puts "I'm about to say something..."
     end
 
-    IO.inspect prefix_ast, label: "prefix_ast"
-
-    final_ast = AST.prefix_function_code function_ast, prefix_ast
-
-    IO.inspect final_ast, label: "final_ast"
-
-    final_ast
+    AST.prefix_function_code function_ast, prefix_ast
   end
 
   defmacro defdep([{key, value}]) do

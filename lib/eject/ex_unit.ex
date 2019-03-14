@@ -8,9 +8,6 @@ defmodule Eject.ExUnit do
   end
 
   defmacro depmodule(key, do: body) do
-    IO.inspect key,  label: "key"
-    IO.inspect body, label: "body"
-
     module_name = key
                   |> Atom.to_string
                   |> Macro.camelize
@@ -38,9 +35,6 @@ defmodule Eject.ExUnit do
   end
 
   defmacro depvalue([{key, value}]) do
-    IO.inspect key,   label: "key"
-    IO.inspect value, label: "value"
-
     quote do
       setup context do
         deps = Map.get context,
